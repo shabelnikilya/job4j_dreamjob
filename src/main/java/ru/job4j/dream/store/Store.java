@@ -24,15 +24,15 @@ public class Store {
         posts.put(3, new Post(3, "Senior Java Job",
                 "Требуется Java разработчик с опытом от 3 лет", LocalDateTime.now()));
         candidates.put(1, new Candidate(1, "Junior Java"));
-        candidates.put(2, new Candidate(1, "Middle Java"));
-        candidates.put(3, new Candidate(1, "Senior Java"));
+        candidates.put(2, new Candidate(2, "Middle Java"));
+        candidates.put(3, new Candidate(3, "Senior Java"));
     }
 
     public static Store instOf() {
         return INST;
     }
 
-    public Collection<Post> findAll() {
+    public Collection<Post> findAllPosts() {
         return posts.values();
     }
 
