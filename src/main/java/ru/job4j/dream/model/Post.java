@@ -1,6 +1,7 @@
 package ru.job4j.dream.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Post {
@@ -42,6 +43,10 @@ public class Post {
 
     public LocalDateTime getCreated() {
         return created;
+    }
+
+    public String getCorrectDate() {
+        return this.getCreated().format(DateTimeFormatter.ofPattern("HH:mm dd-MMMM-yyyy"));
     }
 
     public void setCreated(LocalDateTime created) {
