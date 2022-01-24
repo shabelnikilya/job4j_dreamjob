@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -23,7 +24,6 @@
 </head>
 <body>
 <div class="container pt-3">
-
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
@@ -39,7 +39,12 @@
                     <tbody>
                     <% for (Post post : Store.instOf().findAll()) { %>
                     <tr>
-                        <td><%= post.getName() %></td>
+                        <td>
+                            <a href="<%=request.getContextPath()%>/post/edit.jsp?id=<%=post.getId()%>">
+                            <i class="fa fa-edit mr-3"></i>
+                            </a>
+                            <%= post.getName() %>
+                        </td>
                         <td><%= post.getDescription() %></td>
                         <td><%= post.getCreated().format(DateTimeFormatter.ofPattern("HH:mm dd-MMMM-yyyy ")) %></td>
                     </tr>
