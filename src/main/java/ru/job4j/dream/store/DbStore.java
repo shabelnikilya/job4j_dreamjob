@@ -218,4 +218,15 @@ public class DbStore implements Store {
             e.printStackTrace();
         }
     }
+
+    public void deleteCandidate(int id) {
+        try (Connection connection = pool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(
+                     "DELETE FROM candidate WHERE id = ?")) {
+            ps.setInt(1, id);
+            ps.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
