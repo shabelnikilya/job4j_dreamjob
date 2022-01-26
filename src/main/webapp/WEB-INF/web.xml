@@ -24,14 +24,34 @@
         <servlet-name>CandidatesServlet</servlet-name>
         <servlet-class>ru.job4j.dream.servlet.CandidatesServlet</servlet-class>
     </servlet>
-      <servlet-mapping>
-          <servlet-name>PostServlet</servlet-name>
-          <url-pattern>/post.do</url-pattern>
-      </servlet-mapping>
-      <servlet-mapping>
-          <servlet-name>CandidateServlet</servlet-name>
-          <url-pattern>/candidate.do</url-pattern>
-      </servlet-mapping>
+    <servlet>
+        <servlet-name>DownloadServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlets.DownloadServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UploadServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlets.UploadServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PhotoUploadServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlets.PhotoUploadServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemovePhotoServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlets.RemovePhotoServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemoveCandidateServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlets.RemoveCandidateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PostServlet</servlet-name>
+        <url-pattern>/post.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CandidateServlet</servlet-name>
+        <url-pattern>/candidate.do</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>IndexServlet</servlet-name>
         <url-pattern>/index.do</url-pattern>
@@ -43,5 +63,25 @@
     <servlet-mapping>
         <servlet-name>CandidatesServlet</servlet-name>
         <url-pattern>/candidates.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadServlet</servlet-name>
+        <url-pattern>/download</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UploadServlet</servlet-name>
+        <url-pattern>/upload</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PhotoUploadServlet</servlet-name>
+        <url-pattern>/photoUpload</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemovePhotoServlet</servlet-name>
+        <url-pattern>/removePhoto</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveCandidateServlet</servlet-name>
+        <url-pattern>/removeCandidate</url-pattern>
     </servlet-mapping>
 </web-app>

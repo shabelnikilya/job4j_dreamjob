@@ -23,7 +23,7 @@
 <body>
 <%
     String id = request.getParameter("id");
-    Candidate candidate = new Candidate(0, "");
+    Candidate candidate = new Candidate(0, "", "", "");
     if (id != null) {
         candidate = Store.instOf().findCandidateById(Integer.parseInt(id));
     }
@@ -41,8 +41,12 @@
             <div class="card-body">
                 <form action="<%=request.getContextPath()%>/candidate.do?id=<%=candidate.getId()%>" method="post">
                     <div class="form-group">
+                        <label>Название вакансии</label>
+                        <input type="text" class="form-control" name="nameVacancy" value="<%=candidate.getNameVacancy()%>">
                         <label>Имя</label>
                         <input type="text" class="form-control" name="name" value="<%=candidate.getName()%>">
+                        <label>Фамилия</label>
+                        <input type="text" class="form-control" name="secondName" value="<%=candidate.getSecondName()%>">
                     </div>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </form>

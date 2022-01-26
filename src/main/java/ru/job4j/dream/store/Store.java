@@ -23,9 +23,9 @@ public class Store {
                 "Требуется Java разработчик с опытом от 1 года", LocalDateTime.now()));
         posts.put(3, new Post(3, "Senior Java Job",
                 "Требуется Java разработчик с опытом от 3 лет", LocalDateTime.now()));
-        candidates.put(1, new Candidate(1, "Junior Java"));
-        candidates.put(2, new Candidate(2, "Middle Java"));
-        candidates.put(3, new Candidate(3, "Senior Java"));
+        candidates.put(1, new Candidate(1, "Junior Java", "Ilya", "Kolosov"));
+        candidates.put(2, new Candidate(2, "Middle Java", "Roma", "Ivanov"));
+        candidates.put(3, new Candidate(3, "Senior Java", "Jora", "Remuzov"));
     }
 
     public static Store instOf() {
@@ -60,5 +60,9 @@ public class Store {
             candidate.setId(CANDIDATES_ID.incrementAndGet());
         }
         candidates.put(candidate.getId(), candidate);
+    }
+
+    public void deleteCandidate(int id) {
+        candidates.remove(id);
     }
 }

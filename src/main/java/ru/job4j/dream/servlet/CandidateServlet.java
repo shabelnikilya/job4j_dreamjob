@@ -22,7 +22,9 @@ public class CandidateServlet extends HttpServlet {
         Store.instOf().save(
                 new Candidate(
                         Integer.parseInt(req.getParameter("id")),
-                        req.getParameter("name")));
+                        req.getParameter("nameVacancy"),
+                        req.getParameter("name"),
+                        req.getParameter("secondName")));
         resp.sendRedirect(req.getContextPath() + "/candidates.do");
     }
 }

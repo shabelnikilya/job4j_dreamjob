@@ -22,7 +22,6 @@
 </head>
 <body>
 <div class="container pt-3">
-
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
@@ -32,7 +31,10 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">Названия</th>
+                        <th scope="col">Название вакансии</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Фамилия</th>
+                        <th scope="col">Фотография</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -42,7 +44,23 @@
                                     <a href='<c:url value="/candidate/edit.jsp?id=${can.id}"/>'>
                                         <i class="fa fa-edit mr-3"></i>
                                     </a>
-                                    <c:out value="${can.name}"/>
+                                    <a href='<c:url value="/removeCandidate?id=${can.id}"/>'>
+                                            &#10006
+                                    </a>
+                                    <c:out value="${can.nameVacancy}"/>
+                                </td>
+                                <td><c:out value="${can.name}"/></td>
+                                <td><c:out value="${can.secondName}"/></td>
+                                <td>
+                                    <img src="<c:url value='/download?id=${can.id}'/>" width="100px" height="70px"/>
+                                    <br>
+                                    <a href='<c:url value="/photoUpload?id=${can.id}"/>'>
+                                            <button type="submit" style="height:25px;width:100px">Добавить</button>
+                                    </a>
+                                    <br>
+                                    <a href='<c:url value="/removePhoto?id=${can.id}"/>'>
+                                        <button type="submit" style="height:25px;width:100px">Удалить</button>
+                                    </a>
                                 </td>
                             </tr>
                         </c:forEach>
