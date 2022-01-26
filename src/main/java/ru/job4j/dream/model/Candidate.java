@@ -63,4 +63,13 @@ public class Candidate {
     public int hashCode() {
         return Objects.hash(id, nameVacancy);
     }
+
+    @Override
+    public String toString() {
+        return "Candidate{" + "id=" + id
+                + ", nameVacancy='" + nameVacancy + '\''
+                + ", name='" + name + '\''
+                + ", secondName='" + secondName + '\''
+                + '}';
+    }
 }
