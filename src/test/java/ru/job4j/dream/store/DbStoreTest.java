@@ -20,6 +20,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class DbStoreTest {
+
     private final Store store = DbStore.instOf();
     private final LocalDateTime inc = LocalDateTime.now();
     private static Connection connection;
