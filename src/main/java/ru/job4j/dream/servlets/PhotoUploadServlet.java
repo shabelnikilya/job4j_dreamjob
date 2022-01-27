@@ -4,6 +4,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import ru.job4j.dream.utils.ReadProperties;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -18,11 +19,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoUploadServlet extends HttpServlet {
+    private final ReadProperties properties = new ReadProperties(
+            "C:\\projects\\job4j_dreamjob\\src\\main\\resources\\app.properties"
+    );
+
+    public PhotoUploadServlet() {
+        properties.load();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<String> images = new ArrayList<>();
-        for (File name : new File("c:\\images\\").listFiles()) {
+        for (File name : new File(properties.getPath("default.dir")).listFiles()) {
             images.add(name.getName());
         }
         req.setAttribute("images", images);

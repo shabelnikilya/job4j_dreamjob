@@ -1,5 +1,7 @@
 package ru.job4j.dream.servlets;
 
+import ru.job4j.dream.utils.ReadProperties;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -9,11 +11,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class RemovePhotoServlet extends HttpServlet {
+    private final ReadProperties properties = new ReadProperties(
+            "C:\\projects\\job4j_dreamjob\\src\\main\\resources\\app.properties"
+    );
+
+    public RemovePhotoServlet() {
+        properties.load();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String name = req.getParameter("id");
-        for (File file : new File("c:\\images\\").listFiles()) {
+        for (File file : new File(properties.getPath("default.dir")).listFiles()) {
             if (file.getName().startsWith(name)) {
                 Files.delete(file.toPath());
                 break;
