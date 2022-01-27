@@ -24,7 +24,7 @@ import java.util.List;
 public class PhotoUploadServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(PhotoUploadServlet.class.getName());
     private final ReadProperties properties = new ReadProperties(
-            "C:\\projects\\job4j_dreamjob\\src\\main\\resources\\app.properties"
+            PhotoUploadServlet.class.getClassLoader().getResource("app.properties").getPath()
     );
 
     public PhotoUploadServlet() {

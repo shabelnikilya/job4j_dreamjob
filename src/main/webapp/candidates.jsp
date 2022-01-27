@@ -31,7 +31,7 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">Название вакансии</th>
+                        <th scope="col">Претендует на должность</th>
                         <th scope="col">Имя</th>
                         <th scope="col">Фамилия</th>
                         <th scope="col">Фотография</th>
