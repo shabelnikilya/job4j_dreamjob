@@ -4,6 +4,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.job4j.dream.store.DbStore;
 import ru.job4j.dream.utils.ReadProperties;
 
 import javax.servlet.RequestDispatcher;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UploadServlet extends HttpServlet {
+    private static final Logger LOG = LoggerFactory.getLogger(UploadServlet.class.getName());
     private final ReadProperties properties = new ReadProperties(
             "C:\\projects\\job4j_dreamjob\\src\\main\\resources\\app.properties"
     );
@@ -60,7 +64,7 @@ public class UploadServlet extends HttpServlet {
                 }
             }
         } catch (FileUploadException e) {
-            e.printStackTrace();
+            LOG.error("Exception in UploadServlet", e);
         }
         doGet(req, resp);
     }

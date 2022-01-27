@@ -1,21 +1,23 @@
 package ru.job4j.dream.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DbStore implements Store {
+    private static final Logger LOG = LoggerFactory.getLogger(DbStore.class);
     private final BasicDataSource pool = new BasicDataSource();
 
     private DbStore() {
@@ -26,13 +28,13 @@ public class DbStore implements Store {
                         .getResourceAsStream("db.properties")
                 ))) {
             cfg.load(io);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+        } catch (IOException e) {
+            LOG.error(" I/O exception", e);
         }
         try {
             Class.forName(cfg.getProperty("jdbc.driver"));
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+        } catch (ClassNotFoundException e) {
+            LOG.error("Driver-related exception (JDBC)", e);
         }
         pool.setDriverClassName(cfg.getProperty("jdbc.driver"));
         pool.setUrl(cfg.getProperty("jdbc.url"));
@@ -65,8 +67,8 @@ public class DbStore implements Store {
                             it.getTimestamp("created").toLocalDateTime()));
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
         }
         return posts;
     }
@@ -85,8 +87,8 @@ public class DbStore implements Store {
                             it.getString("second_name")));
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
         }
         return candidates;
     }
@@ -114,8 +116,8 @@ public class DbStore implements Store {
                             it.getTimestamp("created").toLocalDateTime());
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
         }
         return null;
     }
@@ -134,8 +136,8 @@ public class DbStore implements Store {
                             it.getString("second_name"));
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
         }
         return null;
     }
@@ -163,8 +165,8 @@ public class DbStore implements Store {
                     post.setId(id.getInt(1));
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
         }
         return post;
     }
@@ -178,8 +180,8 @@ public class DbStore implements Store {
             ps.setTimestamp(3, Timestamp.valueOf(post.getCreated()));
             ps.setInt(4, post.getId());
             ps.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
         }
     }
 
@@ -199,8 +201,8 @@ public class DbStore implements Store {
                     candidate.setId(id.getInt(1));
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
         }
         return candidate;
     }
@@ -214,8 +216,8 @@ public class DbStore implements Store {
             ps.setString(3, candidate.getSecondName());
             ps.setInt(4, candidate.getId());
             ps.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
         }
     }
 
@@ -225,8 +227,8 @@ public class DbStore implements Store {
                      "DELETE FROM candidate WHERE id = ?")) {
             ps.setInt(1, id);
             ps.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
         }
     }
 }
