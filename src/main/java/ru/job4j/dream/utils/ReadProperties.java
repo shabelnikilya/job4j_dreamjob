@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReadProperties {
+
     private final Map<String, String> value = new HashMap<>();
     private final String path;
 
