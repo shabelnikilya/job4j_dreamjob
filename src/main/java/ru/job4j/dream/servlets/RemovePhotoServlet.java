@@ -15,10 +15,6 @@ public class RemovePhotoServlet extends HttpServlet {
             PhotoUploadServlet.class.getClassLoader().getResource("app.properties").getPath()
     );
 
-    public RemovePhotoServlet() {
-        properties.load();
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String name = req.getParameter("id");

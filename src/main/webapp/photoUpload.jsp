@@ -13,7 +13,7 @@
 <body>
 <div class="container">
     <h1 align="center">Выберете фото для кандидата</h1>
-    <img src="<c:url value='/download?id=${param.id}'/>" width="100px" height="100px"/>
+    <img src="<c:url value='/download?id=${param.id}'/>" width="150px" height="150px"/>
         <form action="<c:url value="/photoUpload?id=${param.id}"/>" method="post" enctype="multipart/form-data">
             <div class="checkbox">
                 <input type="file" name="file">

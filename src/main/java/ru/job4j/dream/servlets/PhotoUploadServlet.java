@@ -6,9 +6,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.job4j.dream.store.DbStore;
 import ru.job4j.dream.utils.ReadProperties;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -27,10 +25,6 @@ public class PhotoUploadServlet extends HttpServlet {
             PhotoUploadServlet.class.getClassLoader().getResource("app.properties").getPath()
     );
 
-    public PhotoUploadServlet() {
-        properties.load();
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<String> images = new ArrayList<>();
@@ -43,7 +37,7 @@ public class PhotoUploadServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletContext servletContext = this.getServletConfig().getServletContext();
         File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -51,13 +45,15 @@ public class PhotoUploadServlet extends HttpServlet {
         ServletFileUpload upload = new ServletFileUpload(factory);
         try {
             List<FileItem> items = upload.parseRequest(req);
-            File folder = new File("c:\\images\\");
+            File folder = new File(properties.getPath("default.dir"));
             if (!folder.exists()) {
                 folder.mkdir();
             }
+            String newNameFile = req.getParameter("id") + ".%s";
             for (FileItem item : items) {
                 if (!item.isFormField()) {
-                    File file = new File(folder + File.separator + item.getName());
+                    File file = new File(folder + File.separator
+                            + String.format(newNameFile, item.getName().split("\\.")[1]));
                     try (FileOutputStream out = new FileOutputStream(file)) {
                         out.write(item.getInputStream().readAllBytes());
                     }
@@ -66,6 +62,6 @@ public class PhotoUploadServlet extends HttpServlet {
         } catch (FileUploadException e) {
             LOG.error("Exception in PhotoUploadServlet", e);
         }
-        doGet(req, resp);
+        resp.sendRedirect(req.getContextPath() + "/candidates.do");
     }
 }

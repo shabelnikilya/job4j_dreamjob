@@ -14,10 +14,6 @@ public class DownloadServlet extends HttpServlet {
             PhotoUploadServlet.class.getClassLoader().getResource("app.properties").getPath()
     );
 
-    public DownloadServlet() {
-        properties.load();
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String name = req.getParameter("id");

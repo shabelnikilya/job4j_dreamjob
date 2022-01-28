@@ -1,5 +1,8 @@
 package ru.job4j.dream.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -8,34 +11,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReadProperties {
-
+    private static final Logger LOG = LoggerFactory.getLogger(ReadProperties.class);
     private final Map<String, String> value = new HashMap<>();
-    private final String path;
 
     public ReadProperties(String path) {
         validPath(path);
-        this.path = path;
+        try (BufferedReader read = new BufferedReader(
+                new FileReader(path))) {
+            read.lines()
+                    .filter(line -> line.charAt(0) != '#')
+                    .forEach(line -> {
+                        validFileProperties(path, line);
+                        value.put(line.split("=")[0], line.split("=")[1]);
+                    });
+        } catch (IOException e) {
+            LOG.error("I/O exception in class constructor ReadProperties", e);
+        }
     }
 
     public String getPath(String key) {
         return value.get(key);
     }
 
-    public void load() {
-        try (BufferedReader read = new BufferedReader(
-                new FileReader(path))) {
-            read.lines()
-                    .filter(line -> line.charAt(0) != '#')
-                    .forEach(line -> {
-                validFileProperties(line);
-                value.put(line.split("=")[0], line.split("=")[1]);
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void validFileProperties(String line) {
+    public void validFileProperties(String path, String line) {
         File properties = new File(path);
         if (line == null || "".equals(line)) {
             throw new IllegalArgumentException("Empty line in the file - " + properties.getName());

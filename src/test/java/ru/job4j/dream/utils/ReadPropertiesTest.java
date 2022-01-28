@@ -11,7 +11,6 @@ public class ReadPropertiesTest {
     public void getPathWithCorrect() {
         String path = "src/test/resources/app.properties";
         ReadProperties prop = new ReadProperties(path);
-        prop.load();
         assertThat(prop.getPath("default.image"), is("C:\\images\\0.jpg"));
         assertThat(prop.getPath("default.dir"), is("C:\\images"));
     }
@@ -20,7 +19,6 @@ public class ReadPropertiesTest {
     public void getPathWhenNotFoundKey() {
         String path = "src/test/resources/app.properties";
         ReadProperties prop = new ReadProperties(path);
-        prop.load();
         assertNull(prop.getPath("defaultimage"));
     }
 
@@ -40,7 +38,6 @@ public class ReadPropertiesTest {
     public void getPathWhenReadFileWithComment() {
         String path = "src/test/resources/app_with_comment.properties";
         ReadProperties prop = new ReadProperties(path);
-        prop.load();
         assertThat(prop.getPath("default.image"), is("C:\\images\\0.jpg"));
         assertThat(prop.getPath("default.dir"), is("C:\\images"));
     }
@@ -49,20 +46,17 @@ public class ReadPropertiesTest {
     public void getPathWhenReadFileWithoutValue() {
         String path = "src/test/resources/app_without_value.properties";
         ReadProperties prop = new ReadProperties(path);
-        prop.load();
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void getPathWhenReadFileWithoutKey() {
         String path = "src/test/resources/app_without_key.properties";
         ReadProperties prop = new ReadProperties(path);
-        prop.load();
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void getPathWhenReadFileWithoutEqually() {
         String path = "src/test/resources/app_without_equally.properties";
         ReadProperties prop = new ReadProperties(path);
-        prop.load();
     }
 }
