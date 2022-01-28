@@ -19,6 +19,7 @@ public class PostServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
+        req.setAttribute("user", req.getSession().getAttribute("user"));
         DbStore.instOf().save(
                 new Post(
                 Integer.parseInt(req.getParameter("id")),

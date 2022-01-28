@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="ru.job4j.dream.model.Post" %>
 <%@ page import="ru.job4j.dream.store.DbStore" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -33,10 +34,17 @@
         <div class="card" style="width: 100%">
             <div class="card-header">
                 <% if (id == null) { %>
-                Новая вакансия.
+                <div style="float: left;"><font size="6">Новая вакансия.</font></div>
                 <% } else { %>
-                Редактирование вакансии.
+                <div style="float: left;"><font size="6">Редактирование вакансии.</font></div>
                 <% } %>
+                <c:if test="${user == null}">
+                    <div style="position:absolute; right:0;"><font size="4"><a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">Войти</a></font></div>
+                </c:if>
+                <c:if test="${user != null}">
+                    <div style="position:absolute; right:0;"><font size="4"><a class="nav-link" href="<%=request.getContextPath()%>/login.jsp"><c:out value="${user.name}"/></a></font></div>
+                    <br><div style="position:absolute; right:0;"><font size="4"><a class="nav-link" href="<%=request.getContextPath()%>/logout.do">Выйти</a></font></div>
+                </c:if>
             </div>
             <div class="card-body">
                 <form action="<%=request.getContextPath()%>/post.do?id=<%=post.getId()%>" method="post">
