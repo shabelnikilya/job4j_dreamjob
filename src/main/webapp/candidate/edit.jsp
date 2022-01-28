@@ -38,9 +38,6 @@
                 <% } else { %>
                 <div style="float: left;"><font size="6">Редактировать кандидата.</font></div>
                 <% } %>
-                <c:if test="${user == null}">
-                    <div style="position:absolute; right:0;"><font size="4"><a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">Войти</a></font></div>
-                </c:if>
                 <c:if test="${user != null}">
                     <div style="position:absolute; right:0;"><font size="4"><a class="nav-link" href="<%=request.getContextPath()%>/login.jsp"><c:out value="${user.name}"/></a></font></div>
                     <br><div style="position:absolute; right:0;"><font size="4"><a class="nav-link" href="<%=request.getContextPath()%>/logout.do">Выйти</a></font></div>
