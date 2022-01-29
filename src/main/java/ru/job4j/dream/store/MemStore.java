@@ -7,6 +7,7 @@ import ru.job4j.dream.model.User;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -86,6 +87,14 @@ public class MemStore implements Store {
             user.setId(CANDIDATES_ID.incrementAndGet());
         }
         users.put(user.getId(), user);
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        Optional<User> rsl = users.values().stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst();
+        return rsl.orElse(null);
     }
 
     @Override

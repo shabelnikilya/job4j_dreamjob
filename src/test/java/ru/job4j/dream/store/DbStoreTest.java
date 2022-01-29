@@ -165,7 +165,7 @@ public class DbStoreTest {
         store.save(first);
         User second =  new User(0, "second name", "second@mail", "****");
         store.save(second);
-        assertThat(List.of(first, second), is(store.findAllUsers()));
+        assertThat(store.findAllUsers(), is(List.of(first, second)));
     }
 
     @Test
@@ -178,5 +178,14 @@ public class DbStoreTest {
         store.deleteCandidate(first.getId());
         assertThat(store.findAllCandidates().size(), is(1));
         assertThat(store.findAllCandidates(), is(exp));
+    }
+
+    @Test
+    public void whenCreatesUsersAndSearchEmail() {
+        User first =  new User(0, "name", "mail", "****");
+        User second =  new User(0, "second name", "second@mail", "****");
+        store.save(first);
+        store.save(second);
+        assertThat(store.findUserByEmail("second@mail"), is(second));
     }
 }

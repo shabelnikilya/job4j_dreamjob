@@ -201,6 +201,26 @@ public class DbStore implements Store {
         return null;
     }
 
+    @Override
+    public User findUserByEmail(String email) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users WHERE email = ?")
+        ) {
+            ps.setString(1, email);
+            try (ResultSet it = ps.executeQuery()) {
+                if (it.next()) {
+                    return new User(it.getInt("id"),
+                            it.getString("name"),
+                            it.getString("email"),
+                            it.getString("password"));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
+        }
+        return null;
+    }
+
     private Post create(Post post) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement("INSERT INTO post(name, description, created) VALUES (?, ?, ?)",
