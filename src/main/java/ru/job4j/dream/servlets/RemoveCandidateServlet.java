@@ -10,9 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class RemoveCandidateServlet extends HttpServlet {
-    private final ReadProperties properties = new ReadProperties(
-            PhotoUploadServlet.class.getClassLoader().getResource("app.properties").getPath()
-    );
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

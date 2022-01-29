@@ -21,9 +21,7 @@ import java.util.List;
 
 public class PhotoUploadServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(PhotoUploadServlet.class.getName());
-    private final ReadProperties properties = new ReadProperties(
-            PhotoUploadServlet.class.getClassLoader().getResource("app.properties").getPath()
-    );
+    private final ReadProperties properties = new ReadProperties();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

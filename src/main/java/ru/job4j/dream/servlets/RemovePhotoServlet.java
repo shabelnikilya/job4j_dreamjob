@@ -11,9 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class RemovePhotoServlet extends HttpServlet {
-    private final ReadProperties properties = new ReadProperties(
-            PhotoUploadServlet.class.getClassLoader().getResource("app.properties").getPath()
-    );
+    private final ReadProperties properties = new ReadProperties();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
