@@ -39,8 +39,16 @@
             <div style="position:absolute; right:360px;">
                 <c:if test="${user != null}">
                     <ul class="nav">
-                        <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/login.jsp"><c:out value="${user.name}"/></a></li>
-                        <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/logout.do">Выйти</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">
+                                <c:out value="${user.name}"/>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<%=request.getContextPath()%>/logout.do">
+                                Выйти
+                            </a>
+                        </li>
                     </ul>
                 </c:if>
                 <c:if test="${user == null}">
