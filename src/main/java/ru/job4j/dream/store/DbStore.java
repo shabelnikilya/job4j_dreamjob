@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.job4j.dream.model.User;
 
 public class DbStore implements Store {
     private static final Logger LOG = LoggerFactory.getLogger(DbStore.class);
@@ -151,6 +152,55 @@ public class DbStore implements Store {
         }
     }
 
+    @Override
+    public Collection<User> findAllUsers() {
+        List<User> users = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users")
+        ) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    users.add(new User(it.getInt("id"),
+                            it.getString("name"),
+                            it.getString("email"),
+                            it.getString("password")));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
+        }
+        return users;
+    }
+
+    @Override
+    public void save(User user) {
+        if (user.getId() == 0) {
+            create(user);
+        } else {
+            update(user);
+        }
+    }
+
+    @Override
+    public User findUserById(int id) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users WHERE id = ?")
+        ) {
+            ps.setInt(1, id);
+            try (ResultSet it = ps.executeQuery()) {
+                if (it.next()) {
+                    return new User(it.getInt("id"),
+                            it.getString("name"),
+                            it.getString("email"),
+                            it.getString("password"));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
+        }
+        return null;
+    }
+
     private Post create(Post post) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement("INSERT INTO post(name, description, created) VALUES (?, ?, ?)",
@@ -215,6 +265,40 @@ public class DbStore implements Store {
             ps.setString(2, candidate.getName());
             ps.setString(3, candidate.getSecondName());
             ps.setInt(4, candidate.getId());
+            ps.execute();
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
+        }
+    }
+
+    private User create(User user) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("INSERT INTO users(name, email, password) VALUES (?, ?, ?)",
+                     PreparedStatement.RETURN_GENERATED_KEYS)
+        ) {
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            ps.execute();
+            try (ResultSet id = ps.getGeneratedKeys()) {
+                if (id.next()) {
+                    user.setId(id.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
+        }
+        return user;
+    }
+
+    private void update(User user) {
+        try (Connection connection = pool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(
+                     "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?")) {
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            ps.setInt(4, user.getId());
             ps.execute();
         } catch (SQLException e) {
             LOG.error("SQL exception in DbStore", e);

@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
+import ru.job4j.dream.model.User;
 
 import java.io.InputStream;
 import java.sql.Connection;
@@ -51,15 +52,15 @@ public class DbStoreTest {
 
     @After
     public void wipeTable() throws SQLException {
-        try (PreparedStatement statementPost = connection.prepareStatement(
+        try (PreparedStatement statement = connection.prepareStatement(
                 "DELETE FROM post;" +
                         "DELETE FROM candidate;" +
+                        "DELETE FROM users;" +
                         "ALTER TABLE post ALTER COLUMN id RESTART WITH 1;" +
-                        "ALTER TABLE candidate ALTER COLUMN id RESTART WITH 1;")) {
-            statementPost.execute();
-            statementPost.execute();
-            statementPost.execute();
-            statementPost.execute();
+                        "ALTER TABLE candidate ALTER COLUMN id RESTART WITH 1;" +
+                        "ALTER TABLE users ALTER COLUMN id RESTART WITH 1;"
+        )) {
+            statement.execute();
         }
     }
 
@@ -77,6 +78,14 @@ public class DbStoreTest {
         store.save(candidate);
         Candidate postInDb = store.findCandidateById(candidate.getId());
         assertThat(postInDb.getName(), is(candidate.getName()));
+    }
+
+    @Test
+    public void whenCreateUser() {
+        User user = new User(0, "name", "name@yandex.ru", "111222");
+        store.save(user);
+        User userInDb = store.findUserById(user.getId());
+        assertThat(userInDb.getName(), is(user.getName()));
     }
 
     @Test
@@ -100,10 +109,27 @@ public class DbStoreTest {
     }
 
     @Test
+    public void whenChangeUser() {
+        User first =  new User(0, "name", "mail", "****");
+        store.save(first);
+        User second =  new User(1, "second name", "second@mail", "****");
+        store.save(second);
+        User userInDb = store.findUserById(1);
+        assertThat(userInDb.getName(), is(second.getName()));
+    }
+
+    @Test
     public void whenCreatePostAndHeNotFound() {
         Post post = new Post(0, "Java Job", "Без опыта", inc);
         store.save(post);
         assertNull(store.findPostById(0));
+    }
+
+    @Test
+    public void whenCreateUserAndHeNotFound() {
+        User user = new User(0, "name", "name@yandex.ru", "111222");
+        store.save(user);
+        assertNull(store.findUserById(0));
     }
 
     @Test
@@ -131,6 +157,15 @@ public class DbStoreTest {
         store.save(first);
         store.save(second);
         assertThat(store.findAllCandidates(), is(exp));
+    }
+
+    @Test
+    public void whenCreateUsersAndCheckAllUsers() {
+        User first =  new User(0, "name", "mail", "****");
+        store.save(first);
+        User second =  new User(0, "second name", "second@mail", "****");
+        store.save(second);
+        assertThat(List.of(first, second), is(store.findAllUsers()));
     }
 
     @Test

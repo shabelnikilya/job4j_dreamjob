@@ -2,6 +2,7 @@ package ru.job4j.dream.store;
 
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
+import ru.job4j.dream.model.User;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -9,12 +10,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MemStore {
+public class MemStore implements Store {
     private static final MemStore INST = new MemStore();
     private static final AtomicInteger POST_ID = new AtomicInteger(3);
     private static final AtomicInteger CANDIDATES_ID = new AtomicInteger(3);
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
+    private final Map<Integer, User> users = new ConcurrentHashMap<>();
 
     private MemStore() {
         posts.put(1, new Post(1, "Junior Java Job",
@@ -32,22 +34,37 @@ public class MemStore {
         return INST;
     }
 
+    @Override
     public Collection<Post> findAllPosts() {
         return posts.values();
     }
 
+    @Override
     public Collection<Candidate> findAllCandidates() {
         return candidates.values();
     }
 
+    @Override
+    public Collection<User> findAllUsers() {
+        return users.values();
+    }
+
+    @Override
     public Post findPostById(int id) {
         return posts.get(id);
     }
 
+    @Override
     public Candidate findCandidateById(int id) {
         return candidates.get(id);
     }
 
+    @Override
+    public User findUserById(int id) {
+        return users.get(id);
+    }
+
+    @Override
     public void save(Post post) {
         if (post.getId() == 0) {
             post.setId(POST_ID.incrementAndGet());
@@ -55,6 +72,7 @@ public class MemStore {
         posts.put(post.getId(), post);
     }
 
+    @Override
     public void save(Candidate candidate) {
         if (candidate.getId() == 0) {
             candidate.setId(CANDIDATES_ID.incrementAndGet());
@@ -62,6 +80,15 @@ public class MemStore {
         candidates.put(candidate.getId(), candidate);
     }
 
+    @Override
+    public void save(User user) {
+        if (user.getId() == 0) {
+            user.setId(CANDIDATES_ID.incrementAndGet());
+        }
+        users.put(user.getId(), user);
+    }
+
+    @Override
     public void deleteCandidate(int id) {
         candidates.remove(id);
     }
