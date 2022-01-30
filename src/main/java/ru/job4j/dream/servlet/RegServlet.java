@@ -16,11 +16,8 @@ public class RegServlet extends HttpServlet {
         String name = req.getParameter("name");
         String email = req.getParameter("email");
         String password = req.getParameter("password");
-        if (name.equals("") || email.equals("") || password.equals("")) {
-            req.setAttribute("error", "Одно или несколько полей не заполнены");
-            req.getRequestDispatcher("reg.jsp").forward(req, resp);
-        } else if (DbStore.instOf().findUserByEmail(email) != null || !email.contains("@")) {
-            req.setAttribute("error", "Пользователь с данной почтой уже зарегестрирован или некорректная почта!");
+        if (DbStore.instOf().findUserByEmail(email) != null) {
+            req.setAttribute("error", "Пользователь с данной почтой уже зарегестрирован!");
             req.getRequestDispatcher("reg.jsp").forward(req, resp);
         } else {
             DbStore.instOf().save(new User(name, email, password));
