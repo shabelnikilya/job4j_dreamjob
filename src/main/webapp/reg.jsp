@@ -24,28 +24,30 @@
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
-                Авторизация
+                Регистрация
             </div>
             <div class="card-body">
-                <form action="<%=request.getContextPath()%>/auth.do" method="post">
+                Заполните данные.
+                <form action="<%=request.getContextPath()%>/reg.do" method="post">
                     <div class="form-group">
-                        <label>Почта</label>
+                        <br><label>Имя пользователя:</label>
+                        <input type="text" class="form-control" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label>Почта:</label>
                         <input type="text" class="form-control" name="email">
                     </div>
                     <div class="form-group">
-                        <label>Пароль</label>
+                        <label>Пароль:</label>
                         <input type="text" class="form-control" name="password">
                     </div>
-                    <button type="submit" class="btn btn-primary">Войти</button>
+                    <button type="submit" class="btn btn-primary">Зарегестрироваться</button>
                     <c:if test="${not empty error}">
                         <div style="color:#0088ff; font-weight: bold; margin: 30px 0;">
                             <c:out value="${error}"/>
                         </div>
                     </c:if>
                 </form>
-                    <form action="<%=request.getContextPath()%>/reg.jsp" method="get">
-                        <br><button type="submit" class="btn btn-primary">Регистрация</button>
-                    </form>
             </div>
         </div>
     </div>
