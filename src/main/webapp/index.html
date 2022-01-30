@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<form>
+    <div class="container-fluid">
+        <h2>Заполните поля</h2>
+        <div class="form-row" style="width: 15%;">
+            <div class="rows">
+                <input type="text" class="form-control" placeholder="Имя" name="name">
+            </div>
+            <div class="rows">
+                <input type="text" class="form-control" placeholder="Фамилия" name="secondName">
+            </div>
+        </div>
+        <div class="form-check form-check-inline">
+            <label for="exampleFormControlTextarea1">Выберете пол:</label>
+            <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" value="option1">
+            <label class="form-check-label" for="inlineRadio1">М</label>
+            <input class="form-check-input" type="radio" name="gender" id="inlineRadio2" value="option2">
+            <label class="form-check-label" for="inlineRadio2">Ж</label>
+        </div>
+        <div class="form-group" style="width: 60%;">
+            <label for="exampleFormControlTextarea1">Описание</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+<br><table class="table table-bordered" style="width: 80%; margin: auto;">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Имя</th>
+        <th scope="col">Фамилия</th>
+        <th scope="col">Пол</th>
+        <th scope="col">Описание</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th scope="row">1</th>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <th scope="row">2</th>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <th scope="row">3</th>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
