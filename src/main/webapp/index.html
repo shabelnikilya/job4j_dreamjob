@@ -12,9 +12,22 @@
             $('#form').find('input, textarea').each(function() {
                 if ($(this).val() === '') alert($(this).attr('title'));
             })
-            var sex = document.querySelectorAll('input[name="gender"]')
+            var sex = document.querySelectorAll('input[name="gender"]');
             if (!sex[0].checked && !sex[1].checked) alert("Выберете пол!");
             return false;
+        }
+    </script>
+    <script>
+        var row = 1;
+        function addRow() {
+            const name = $('#nm').val();
+            const secondName = $('#snm').val();
+            var sex = document.querySelectorAll('input[name="gender"]');
+            const gender = sex[0].checked ? sex[0].value : sex[1].value;
+            const description = $('#desc').val();
+            $('#table tr:last').after('<tr><th scope="row">' + row++ + '</th><td>'
+                + name + '</td>' + '<td>' + secondName + '</td>' + '<td>' + gender +
+                '</td>' + '<td>' + description + '</td></tr>');
         }
     </script>
 </head>
@@ -32,9 +45,9 @@
         </div>
         <div class="form-check form-check-inline">
             <label>Выберете пол:</label>
-            <input class="form-check-input" type="radio" name="gender" id="mg" value="option1">
+            <input class="form-check-input" type="radio" name="gender" id="mg" value="М">
             <label class="form-check-label" for="mg">М</label>
-            <input class="form-check-input" type="radio" name="gender" id="wg" value="option2">
+            <input class="form-check-input" type="radio" name="gender" id="wg" value="Ж">
             <label class="form-check-label" for="wg">Ж</label>
         </div>
         <div class="form-group" style="width: 60%;">
@@ -43,8 +56,9 @@
         </div>
     </div>
     <button type="submit" class="btn btn-primary" onclick="return validate();">Submit</button>
+    <button type="button" class="btn btn-default" onclick="addRow()">Add row</button>
 </form>
-<br><table class="table table-bordered" style="width: 80%; margin: auto;">
+<br><table class="table table-bordered" style="width: 80%; margin: auto;" id="table">
     <thead>
     <tr>
         <th scope="col">#</th>
@@ -55,27 +69,6 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <th scope="row">1</th>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <th scope="row">2</th>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <th scope="row">3</th>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
     </tbody>
 </table>
 </body>
