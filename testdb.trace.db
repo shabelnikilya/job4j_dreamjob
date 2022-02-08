@@ -1,41 +1,4 @@
-2022-01-26 15:39:23 jdbc[3]: exception
+2022-02-08 09:31:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "DATABASECHANGELOGLOCK" не найдена
 Table "DATABASECHANGELOGLOCK" not found; SQL statement:
 SELECT COUNT(*) FROM DATABASECHANGELOGLOCK [42102-200]
-2022-01-26 15:39:24 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "CREATE TABLE POST  
-    ID[*] SERIAL PRIMARY KEY,
-    NAME TEXT,
-    DESCRIPTION TEXT,
-    CREATED DATETIME
- ;
-CREATE TABLE CANDIDATE 
-    ID SERIAL PRIMARY KEY,
-    NAME_VACANCY TEXT,
-    NAME TEXT,
-    SECOND_NAME TEXT
- ;"
-Syntax error in SQL statement "CREATE TABLE POST  
-    ID[*] SERIAL PRIMARY KEY,
-    NAME TEXT,
-    DESCRIPTION TEXT,
-    CREATED DATETIME
- ;
-CREATE TABLE CANDIDATE 
-    ID SERIAL PRIMARY KEY,
-    NAME_VACANCY TEXT,
-    NAME TEXT,
-    SECOND_NAME TEXT
- ;"; SQL statement:
-CREATE TABLE post  
-    id SERIAL PRIMARY KEY,
-    name TEXT,
-    description TEXT,
-    created DATETIME
- ;
-CREATE TABLE candidate 
-    id SERIAL PRIMARY KEY,
-    name_vacancy TEXT,
-    name TEXT,
-    second_name TEXT
- ; [42000-200]
