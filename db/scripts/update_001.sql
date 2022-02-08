@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS candidate (
     name_vacancy TEXT,
     name TEXT,
     second_name TEXT,
-    city_id INT REFERENCES city(id),
+    city_id INT REFERENCES city(id) ON DELETE CASCADE,
     created TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS users (
