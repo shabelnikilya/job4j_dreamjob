@@ -16,6 +16,18 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script>
+        function validate() {
+            var rsl = true;
+            $('#form').find('input').each(function() {
+                if ($(this).val() === '') {
+                    alert($(this).attr('title'));
+                    rsl = false;
+                }
+            })
+            return rsl;
+        }
+    </script>
 
     <title>Работа мечты</title>
 </head>
@@ -28,20 +40,20 @@
             </div>
             <div class="card-body">
                 Заполните данные.
-                <form action="<%=request.getContextPath()%>/reg.do" method="post">
+                <form id="form" action="<%=request.getContextPath()%>/reg.do" method="post">
                     <div class="form-group">
                         <br><label>Имя пользователя:</label>
-                        <input type="text" class="form-control" name="name" required>
+                        <input title="Заполните поле: Имя пользователя!" type="text" class="form-control" name="name">
                     </div>
                     <div class="form-group">
                         <label>Почта:</label>
-                        <input type="email" class="form-control" name="email" required>
+                        <input title="Заполните поле: Почта!" type="email" class="form-control" name="email">
                     </div>
                     <div class="form-group">
                         <label>Пароль:</label>
-                        <input type="password" class="form-control" name="password" required>
+                        <input title="Заполните поле: Пароль!" type="password" class="form-control" name="password">
                     </div>
-                    <button type="submit" class="btn btn-primary">Зарегестрироваться</button>
+                    <button type="submit" class="btn btn-primary" onclick="return validate()">Зарегестрироваться</button>
                     <c:if test="${not empty error}">
                         <div style="color:#0088ff; font-weight: bold; margin: 30px 0;">
                             <c:out value="${error}"/>

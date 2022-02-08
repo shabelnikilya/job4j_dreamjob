@@ -18,9 +18,41 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Работа мечты</title>
 </head>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
+    <script>
+        function validate() {
+            var rsl = true;
+            $('#form').find('input, select').each(function() {
+                if ($(this).val() === '') {
+                    alert($(this).attr('title'));
+                    rsl = false;
+                }
+            })
+            if (document.querySelector('select').value === '0') {
+                alert($('#select').attr('title'));
+                rsl = false;
+            }
+            return rsl;
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/dreamjob/allCity',
+                dataType: 'json'
+            }).done(function (data) {
+                for (var city of data) {
+                    $('#select').append(`<option value="${city.id}">${city.name}</option>`)
+                };
+            }).fail(function (err) {
+                console.log(err);
+            });
+        });
+    </script>
 <body>
 <%
     String id = request.getParameter("id");
@@ -56,16 +88,23 @@
                 </c:if>
             </div>
             <div class="card-body">
-                <form action="<%=request.getContextPath()%>/candidate.do?id=<%=candidate.getId()%>" method="post">
+                <form id="form" action="<%=request.getContextPath()%>/candidate.do?id=<%=candidate.getId()%>" method="post">
                     <div class="form-group">
                         <label>Название вакансии</label>
-                        <input type="text" class="form-control" name="nameVacancy" value="<%=candidate.getNameVacancy()%>">
+                        <input type="text" title="Заполните поле: Название вакансии!" class="form-control"
+                               name="nameVacancy" value="<%=candidate.getNameVacancy()%>">
                         <label>Имя</label>
-                        <input type="text" class="form-control" name="name" value="<%=candidate.getName()%>">
+                        <input type="text" title="Заполните поле: Имя!" class="form-control"
+                               name="name" value="<%=candidate.getName()%>">
                         <label>Фамилия</label>
-                        <input type="text" class="form-control" name="secondName" value="<%=candidate.getSecondName()%>">
+                        <input type="text" title="Заполните поле: Фамилия!" class="form-control"
+                               name="secondName" value="<%=candidate.getSecondName()%>">
+                        <label>Город</label>
+                        <select id="select" name="city" title="Выберете город!">
+                            <option value="0">Выберете город</option>
+                        </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="submit" class="btn btn-primary" onclick="return validate();">Сохранить</button>
                 </form>
             </div>
         </div>

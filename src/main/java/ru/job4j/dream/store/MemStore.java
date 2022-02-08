@@ -1,15 +1,16 @@
 package ru.job4j.dream.store;
 
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class MemStore implements Store {
     private static final MemStore INST = new MemStore();
@@ -18,6 +19,7 @@ public class MemStore implements Store {
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
     private final Map<Integer, User> users = new ConcurrentHashMap<>();
+    private final List<City> cities = new ArrayList<>();
 
     private MemStore() {
         posts.put(1, new Post(1, "Junior Java Job",
@@ -29,6 +31,9 @@ public class MemStore implements Store {
         candidates.put(1, new Candidate(1, "Junior Java", "Ilya", "Kolosov"));
         candidates.put(2, new Candidate(2, "Middle Java", "Roma", "Ivanov"));
         candidates.put(3, new Candidate(3, "Senior Java", "Jora", "Remuzov"));
+        cities.add(new City(1, "Москва"));
+        cities.add(new City(2, "Казань"));
+        cities.add(new City(3, "Санкт-петербург"));
     }
 
     public static MemStore instOf() {
@@ -36,12 +41,27 @@ public class MemStore implements Store {
     }
 
     @Override
-    public Collection<Post> findAllPosts() {
+    public Collection<Post> findAllPosts(boolean inLastDay) {
+        if (inLastDay) {
+            return posts.values()
+                    .stream()
+                    .filter(post -> post.getCreated().compareTo(LocalDateTime.now().minusDays(1)) >= 0
+                    && post.getCreated().compareTo(LocalDateTime.now()) <= 0)
+                    .collect(Collectors.toList());
+        }
         return posts.values();
     }
 
     @Override
-    public Collection<Candidate> findAllCandidates() {
+    public Collection<Candidate> findAllCandidates(boolean inLastDay) {
+        if (inLastDay) {
+            return candidates.values()
+                    .stream()
+                    .filter(candidate ->
+                            candidate.getCreatedCandidate().compareTo(LocalDateTime.now().minusDays(1)) >= 0
+                            && candidate.getCreatedCandidate().compareTo(LocalDateTime.now()) <= 0)
+                    .collect(Collectors.toList());
+        }
         return candidates.values();
     }
 
@@ -100,5 +120,18 @@ public class MemStore implements Store {
     @Override
     public void deleteCandidate(int id) {
         candidates.remove(id);
+    }
+
+    @Override
+    public List<City> allCities() {
+        return cities;
+    }
+
+    @Override
+    public City findCityById(int id) {
+        Optional<City> rsl = cities.stream()
+                .filter(city -> city.getId() == id)
+                .findFirst();
+        return rsl.orElse(null);
     }
 }

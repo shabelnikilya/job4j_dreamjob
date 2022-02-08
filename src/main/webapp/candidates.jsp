@@ -50,6 +50,7 @@
                         <th scope="col">Претендует на должность</th>
                         <th scope="col">Имя</th>
                         <th scope="col">Фамилия</th>
+                        <th scope="col">Город</th>
                         <th scope="col">Фотография</th>
                     </tr>
                     </thead>
@@ -67,6 +68,7 @@
                                 </td>
                                 <td><c:out value="${can.name}"/></td>
                                 <td><c:out value="${can.secondName}"/></td>
+                                <td><c:out value="${can.city.name}"/></td>
                                 <td>
                                     <img src="<c:url value='/download?id=${can.id}'/>" width="100px" height="70px"/>
                                     <br>

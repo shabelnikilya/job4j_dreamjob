@@ -3,6 +3,7 @@ package ru.job4j.dream.store;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.model.Post;
 
 import java.io.BufferedReader;
@@ -55,11 +56,12 @@ public class DbStore implements Store {
     }
 
     @Override
-    public Collection<Post> findAllPosts() {
+    public Collection<Post> findAllPosts(boolean inLastDay) {
         List<Post> posts = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post")
-        ) {
+             PreparedStatement ps =  cn.prepareStatement(
+                     "SELECT * FROM post"
+                     + (inLastDay ? " WHERE created::DATE BETWEEN now()::DATE - 1 AND now()::DATE;" : ";"))) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
                     posts.add(new Post(it.getInt("id"),
@@ -75,17 +77,27 @@ public class DbStore implements Store {
     }
 
     @Override
-    public Collection<Candidate> findAllCandidates() {
+    public Collection<Candidate> findAllCandidates(boolean inLastDay) {
         List<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM candidate")
+             PreparedStatement ps =  cn.prepareStatement(
+                     "SELECT can.id AS id, ci.id AS city_id, ci.name AS city_name, can.name_vacancy"
+                             + ", can.name, can.second_name, can.created"
+                             + " FROM candidate can JOIN city ci ON can.city_id = ci.id "
+                     + (inLastDay ? "WHERE can.created::DATE BETWEEN now()::DATE - 1 AND now()::DATE;" : ";")
+             )
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
                     candidates.add(new Candidate(it.getInt("id"),
+                            new City(
+                                    it.getInt("city_id"),
+                                    it.getString("city_name")
+                            ),
                             it.getString("name_vacancy"),
                             it.getString("name"),
-                            it.getString("second_name")));
+                            it.getString("second_name"),
+                            it.getTimestamp("created").toLocalDateTime()));
                 }
             }
         } catch (SQLException e) {
@@ -93,6 +105,7 @@ public class DbStore implements Store {
         }
         return candidates;
     }
+
 
     @Override
     public void save(Post post) {
@@ -126,15 +139,24 @@ public class DbStore implements Store {
     @Override
     public Candidate findCandidateById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM candidate WHERE id = ?")
+             PreparedStatement ps =  cn.prepareStatement(
+                     "SELECT can.id AS id, ci.id AS city_id, ci.name AS city_name,"
+                             + " can.name_vacancy, can.name, can.second_name, can.created"
+                             + " FROM candidate can JOIN city ci ON can.city_id = ci.id  WHERE can.id = ?")
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
                     return new Candidate(it.getInt("id"),
+                            new City(
+                                    it.getInt("city_id"),
+                                    it.getString("city_name")
+                            ),
                             it.getString("name_vacancy"),
                             it.getString("name"),
-                            it.getString("second_name"));
+                            it.getString("second_name"),
+                            it.getTimestamp("created").toLocalDateTime()
+                    );
                 }
             }
         } catch (SQLException e) {
@@ -221,9 +243,42 @@ public class DbStore implements Store {
         return null;
     }
 
+    @Override
+    public List<City> allCities() {
+        List<City> cities = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+        PreparedStatement ps = cn.prepareStatement("SELECT * FROM city;")) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    cities.add(new City(it.getInt("id"), it.getString("name")));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
+        }
+        return cities;
+    }
+
+    @Override
+    public City findCityById(int id) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("SELECT name FROM city WHERE id = ?;")) {
+            ps.setInt(1, id);
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    return new City(id, it.getString("name"));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("SQL exception in DbStore", e);
+        }
+        return null;
+    }
+
     private Post create(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO post(name, description, created) VALUES (?, ?, ?)",
+             PreparedStatement ps =  cn.prepareStatement(
+                     "INSERT INTO post(name, description, created) VALUES (?, ?, ?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, post.getName());
@@ -259,12 +314,16 @@ public class DbStore implements Store {
 
     private Candidate create(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO candidate(name_vacancy, name, second_name) VALUES (?, ?, ?)",
+             PreparedStatement ps =  cn.prepareStatement(
+                     "INSERT INTO candidate(name_vacancy, name, second_name, city_id, created) "
+                             + "VALUES (?, ?, ?, ?, ?);",
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, candidate.getNameVacancy());
             ps.setString(2, candidate.getName());
             ps.setString(3, candidate.getSecondName());
+            ps.setInt(4, candidate.getCity().getId());
+            ps.setTimestamp(5, Timestamp.valueOf(candidate.getCreatedCandidate()));
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -280,11 +339,14 @@ public class DbStore implements Store {
     private void update(Candidate candidate) {
         try (Connection connection = pool.getConnection();
              PreparedStatement ps = connection.prepareStatement(
-                     "UPDATE candidate SET name_vacancy = ?, name = ?, second_name = ? WHERE id = ?")) {
+                     "UPDATE candidate SET name_vacancy = ?, name = ?,"
+                             + " second_name = ?, city_id = ?, created = ? WHERE id = ?")) {
             ps.setString(1, candidate.getNameVacancy());
             ps.setString(2, candidate.getName());
             ps.setString(3, candidate.getSecondName());
-            ps.setInt(4, candidate.getId());
+            ps.setInt(4, candidate.getCity().getId());
+            ps.setTimestamp(5, Timestamp.valueOf(candidate.getCreatedCandidate()));
+            ps.setInt(6, candidate.getId());
             ps.execute();
         } catch (SQLException e) {
             LOG.error("SQL exception in DbStore", e);
@@ -293,7 +355,8 @@ public class DbStore implements Store {
 
     private User create(User user) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO users(name, email, password) VALUES (?, ?, ?)",
+             PreparedStatement ps =  cn.prepareStatement(
+                     "INSERT INTO users(name, email, password) VALUES (?, ?, ?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, user.getName());

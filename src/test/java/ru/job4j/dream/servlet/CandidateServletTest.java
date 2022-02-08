@@ -8,7 +8,6 @@ import ru.job4j.dream.store.DbStore;
 import ru.job4j.dream.store.DbStoreTest;
 import ru.job4j.dream.store.Store;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,7 +17,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.Properties;
 
 import static org.hamcrest.core.Is.is;
@@ -71,12 +69,13 @@ public class CandidateServletTest {
         HttpServletResponse resp = mock(HttpServletResponse.class);
         HttpSession session = mock(HttpSession.class);
         when(req.getSession()).thenReturn(session);
+        when(req.getParameter("city")).thenReturn("1");
         when(req.getParameter("id")).thenReturn("0");
         when(req.getParameter("nameVacancy")).thenReturn("vacancy");
         when(req.getParameter("name")).thenReturn("name");
         when(req.getParameter("secondName")).thenReturn("secondName");
         new CandidateServlet().doPost(req, resp);
-        assertNotNull(store.findAllCandidates());
+        assertNotNull(store.findAllCandidates(false));
         assertThat(store.findCandidateById(1).getName(), is("name"));
     }
 
@@ -86,6 +85,7 @@ public class CandidateServletTest {
         HttpServletResponse resp = mock(HttpServletResponse.class);
         HttpSession session = mock(HttpSession.class);
         when(req.getSession()).thenReturn(session);
+        when(req.getParameter("city")).thenReturn("1");
         when(req.getParameter("id")).thenReturn("1");
         when(req.getParameter("nameVacancy")).thenReturn("vacancy");
         when(req.getParameter("name")).thenReturn("name");

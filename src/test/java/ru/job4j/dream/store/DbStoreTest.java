@@ -5,6 +5,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
 
@@ -14,6 +15,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Properties;
 
@@ -73,8 +75,20 @@ public class DbStoreTest {
     }
 
     @Test
+    public void whenCreateTwoPostsAndOneAddTwoDayAfter() {
+        Post first = new Post(0, "Java Job", "Без опыта", inc);
+        Post second = new Post(0, "Java Job", "Без опыта", inc.minus(
+                2, ChronoUnit.DAYS));
+        store.save(first);
+        store.save(second);
+        assertThat(store.findAllPosts(true), is(List.of(first)));
+    }
+
+    @Test
     public void whenCreateCandidate() {
-        Candidate candidate =  new Candidate(0, "java", "roma", "kolesov");
+        Candidate candidate =  new Candidate(
+                0, new City(1, "Москва"),"java", "roma", "kolesov", inc
+        );
         store.save(candidate);
         Candidate postInDb = store.findCandidateById(candidate.getId());
         assertThat(postInDb.getName(), is(candidate.getName()));
@@ -100,9 +114,13 @@ public class DbStoreTest {
 
     @Test
     public void whenChangeCandidate() {
-        Candidate first =  new Candidate(0, "java", "roma", "kolesov");
+        Candidate first =  new Candidate(
+                0, new City(1, "Москва"), "java", "roma", "kolesov", inc
+        );
         store.save(first);
-        Candidate second =  new Candidate(1, "Js", "Grigoriy", "Shishkin");
+        Candidate second =  new Candidate(
+                1, new City(2, "Казань"), "Js", "Grigoriy", "Shishkin", inc
+        );
         store.save(second);
         Candidate postInDb = store.findCandidateById(1);
         assertThat(postInDb.getName(), is(second.getName()));
@@ -134,7 +152,9 @@ public class DbStoreTest {
 
     @Test
     public void whenCreateCandidateAndHeNotFound() {
-        Candidate candidate =  new Candidate(0, "java", "roma", "kolesov");
+        Candidate candidate =  new Candidate(
+                0, new City(1, "Москва"), "java", "roma", "kolesov", inc
+        );
         store.save(candidate);
         assertNull(store.findCandidateById(0));
     }
@@ -146,17 +166,21 @@ public class DbStoreTest {
         List<Post> exp = List.of(first, second);
         store.save(first);
         store.save(second);
-        assertThat(store.findAllPosts(), is(exp));
+        assertThat(store.findAllPosts(false), is(exp));
     }
 
     @Test
     public void whenCreateCandidatesAndCheckAllCandidate() {
-        Candidate first =  new Candidate(0, "java", "roma", "kolesov");
-        Candidate second =  new Candidate(0, "JS", "Egor", "Yelshinov");
+        Candidate first =  new Candidate(
+                0, new City(1, "Москва"), "java", "roma", "kolesov", inc
+        );
+        Candidate second =  new Candidate(
+                0, new City(2, "Казань"), "JS", "Egor", "Yelshinov", inc
+        );
         List<Candidate> exp = List.of(first, second);
         store.save(first);
         store.save(second);
-        assertThat(store.findAllCandidates(), is(exp));
+        assertThat(store.findAllCandidates(false), is(exp));
     }
 
     @Test
@@ -170,14 +194,34 @@ public class DbStoreTest {
 
     @Test
     public void whenCreateCandidatesAndRemoveCandidate() {
-        Candidate first =  new Candidate(0, "java", "roma", "kolesov");
-        Candidate second =  new Candidate(0, "JS", "Egor", "Yelshinov");
+        Candidate first =  new Candidate(
+                0, new City(1, "Москва"), "java", "roma", "kolesov", inc
+        );
+        Candidate second =  new Candidate(
+                0, new City(2, "Казань"), "JS", "Egor", "Yelshinov", inc
+        );
         List<Candidate> exp = List.of(second);
         store.save(first);
         store.save(second);
         store.deleteCandidate(first.getId());
-        assertThat(store.findAllCandidates().size(), is(1));
-        assertThat(store.findAllCandidates(), is(exp));
+        assertThat(store.findAllCandidates(false).size(), is(1));
+        assertThat(store.findAllCandidates(false), is(exp));
+    }
+
+    @Test
+    public void whenCreateTwoCandidatesAndOneAfterThreeDays() {
+        Candidate first =  new Candidate(
+                0, new City(1, "Москва"), "java", "roma", "kolesov", inc
+        );
+        Candidate second =  new Candidate(
+                0, new City(2, "Казань"), "JS", "Egor", "Yelshinov", inc.minus(
+                        3, ChronoUnit.DAYS)
+        );
+        List<Candidate> exp = List.of(first);
+        store.save(first);
+        store.save(second);
+        assertThat(store.findAllCandidates(true).size(), is(1));
+        assertThat(store.findAllCandidates(true), is(exp));
     }
 
     @Test
@@ -187,5 +231,16 @@ public class DbStoreTest {
         store.save(first);
         store.save(second);
         assertThat(store.findUserByEmail("second@mail"), is(second));
+    }
+
+    @Test
+    public void whenFindCity() {
+        assertThat(store.findCityById(1).getName(), is("Москва"));
+    }
+
+    @Test
+    public void whenFindAllCity() {
+        List<City> exp = List.of(new City(1, "Москва"), new City(2, "Казань"));
+        assertThat(store.allCities(), is(exp));
     }
 }

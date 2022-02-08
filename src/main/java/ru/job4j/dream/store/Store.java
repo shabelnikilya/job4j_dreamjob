@@ -1,15 +1,17 @@
 package ru.job4j.dream.store;
 
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface Store {
-    Collection<Post> findAllPosts();
+    Collection<Post> findAllPosts(boolean inLastDay);
 
-    Collection<Candidate> findAllCandidates();
+    Collection<Candidate> findAllCandidates(boolean inLastDay);
 
     Collection<User> findAllUsers();
 
@@ -28,4 +30,8 @@ public interface Store {
     void deleteCandidate(int id);
 
     User findUserByEmail(String email);
+
+    List<City> allCities();
+
+    City findCityById(int id);
 }

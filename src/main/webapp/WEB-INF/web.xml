@@ -12,6 +12,7 @@
         <filter-name>AuthFilter</filter-name>
         <url-pattern>*.do</url-pattern>
     </filter-mapping>
+
       <servlet>
           <servlet-name>PostServlet</servlet-name>
           <servlet-class>ru.job4j.dream.servlet.PostServlet</servlet-class>
@@ -60,6 +61,18 @@
         <servlet-name>RegServlet</servlet-name>
         <servlet-class>ru.job4j.dream.servlet.RegServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CityServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlet.CitiesServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LDCandServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlet.LastDayCandidatesServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LDPostsServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlet.LastDayPostsServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>PostServlet</servlet-name>
         <url-pattern>/post.do</url-pattern>
@@ -107,5 +120,17 @@
     <servlet-mapping>
         <servlet-name>RegServlet</servlet-name>
         <url-pattern>/reg.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CityServlet</servlet-name>
+        <url-pattern>/allCity</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LDCandServlet</servlet-name>
+        <url-pattern>/lastDayCandidates</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LDPostsServlet</servlet-name>
+        <url-pattern>/lastDayPosts</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -1,6 +1,7 @@
 package ru.job4j.dream.servlet;
 
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.store.DbStore;
 
 import javax.servlet.ServletException;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class CandidateServlet extends HttpServlet {
 
@@ -20,12 +22,17 @@ public class CandidateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
         req.setAttribute("user", req.getSession().getAttribute("user"));
+        int cityId = Integer.parseInt(req.getParameter("city"));
         DbStore.instOf().save(
                 new Candidate(
                         Integer.parseInt(req.getParameter("id")),
+                        new City(cityId, DbStore.instOf().findCityById(cityId).getName()),
                         req.getParameter("nameVacancy"),
                         req.getParameter("name"),
-                        req.getParameter("secondName")));
+                        req.getParameter("secondName"),
+                        LocalDateTime.now()
+                )
+        );
         resp.sendRedirect(req.getContextPath() + "/candidates.do");
     }
 }
