@@ -237,4 +237,10 @@ public class DbStoreTest {
     public void whenFindCity() {
         assertThat(store.findCityById(1).getName(), is("Москва"));
     }
+
+    @Test
+    public void whenFindAllCity() {
+        List<City> exp = List.of(new City(1, "Москва"), new City(2, "Казань"));
+        assertThat(store.allCities(), is(exp));
+    }
 }
