@@ -10,3 +10,4 @@
 ![ScreenShot](images/vacancy.jpg)
 ![ScreenShot](images/new_candidates.jpg)
 ![ScreenShot](images/new_vacancy.jpg)
+<br><strong>Контакты:</strong> Telegram @ilya_hollow
